@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>VotoIA — Cédula educativa</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">VotoIA </div>
+  <nav>
+    <a class="{{ 'active' if mode == 'recolectar' else '' }}" href="/">Recolectar dibujos</a>
+    <a class="{{ 'active' if mode == 'votar' else '' }}" href="/votar">Simular votación</a>
+    <a href="/revision">Revisión humana</a>
+    <a href="/resultados">Resultados</a>
+  </nav>
+</header>
+<main class="layout">
+  <h1>Votación educativa simulada</h1>
+  
+  <section class="workspace">
+    <div class="panel ballot-panel">
+      <div class="panel-top"><h2>Cédula de práctica</h2></div>
+      
+      <div class="ballot-scroll">
+        <div id="ballot-wrap" class="ballot-wrap">
+          <img id="ballot-image" src="{{ url_for('static', filename='cedula_educativa.jpg') }}" width="1132" height="626" alt="Cédula educativa de cuatro columnas y ocho organizaciones ficticias">
+          <canvas id="ballot-overlay" width="1132" height="626" aria-label="Seleccionar una casilla de la cédula"></canvas>
+        </div>
+      </div>
+      
+    </div>
+    <aside class="panel editor">
+      <h2>Dibujo a mano alzada</h2>
+      <label for="columna">Elección</label>
+      <select id="columna">
+        {% for contest in contests %}<option value="{{ loop.index0 }}">{{ loop.index }}. {{ contest }}</option>{% endfor %}
+      </select>
+      <label for="partido">Organización</label>
+      <select id="partido">
+        {% for party in parties %}<option value="{{ loop.index0 }}">{{ party }}</option>{% endfor %}
+      </select>
+      
+      <div class="draw-box"><canvas id="myCanvas" width="200" height="200" aria-label="Lienzo para dibujar una marca"></canvas></div>
+      <div class="buttons"><button id="borrar" class="secondary" type="button">Borrar</button><button id="borrar-todo" class="secondary" type="button">Limpiar cédula</button></div>
+        <div class="separator"></div>
+        <button id="registrar" class="primary" type="button">Analizar y registrar esta cédula</button>
+        <p id="ml-status" class="small">Comprobando si existe un modelo entrenado...</p>
+        
+      <div id="mensaje" class="message" role="status" aria-live="polite"></div>
+    </aside>
+  </section>
+  
+</main>
+<script>
+window.VOTO_CONFIG = {{ {'modo': mode, 'categorias': categories, 'partidos': parties, 'elecciones': contests, 'xs': x, 'ys': y, 'width': ballot_w, 'height': ballot_h} | tojson }};
+</script>
+<script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

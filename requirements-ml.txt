@@ -1,0 +1,6 @@
+-r requirements.txt
+# Necesario para entrenar en Colab o usar el modelo entrenado en el servidor.
+tensorflow>=2.16,<3
+scikit-learn>=1.4,<2
+matplotlib>=3.7,<4
+pandas>=2.0,<3
